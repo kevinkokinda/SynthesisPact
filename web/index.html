@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SynthesisPact — On-Chain AI-Human Collaboration</title>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --border: #1e1e2e;
+    --accent: #7c3aed;
+    --accent2: #06b6d4;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --green: #22c55e;
+    --yellow: #eab308;
+    --red: #ef4444;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 14px;
+    min-height: 100vh;
+  }
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .logo {
+    font-size: 20px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+  }
+  nav {
+    margin-left: auto;
+    display: flex;
+    gap: 24px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  nav a { color: var(--muted); text-decoration: none; }
+  nav a:hover { color: var(--text); }
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 40px;
+  }
+  .hero {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+  .hero h1 {
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #fff 40%, var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero p {
+    color: var(--muted);
+    font-size: 16px;
+    max-width: 560px;
+    margin: 0 auto 32px;
+    line-height: 1.6;
+    font-family: -apple-system, sans-serif;
+  }
+  .stats {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    margin-bottom: 64px;
+  }
+  .stat {
+    text-align: center;
+  }
+  .stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--accent2);
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 4px;
+  }
+  .section-title {
+    font-size: 13px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .pact-grid {
+    display: grid;
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  .pact-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    transition: border-color 0.2s;
+  }
+  .pact-card:hover { border-color: var(--accent); }
+  .pact-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .pact-id {
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+    margin-top: 3px;
+  }
+  .pact-scope {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    font-family: -apple-system, sans-serif;
+    flex: 1;
+  }
+  .status-badge {
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+  .status-Proposed  { background: rgba(234,179,8,0.15);  color: var(--yellow); border: 1px solid rgba(234,179,8,0.3); }
+  .status-Active    { background: rgba(6,182,212,0.15);  color: var(--accent2); border: 1px solid rgba(6,182,212,0.3); }
+  .status-Completed { background: rgba(34,197,94,0.15);  color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .status-Disputed  { background: rgba(239,68,68,0.15);  color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+  .status-Cancelled { background: rgba(100,116,139,0.15); color: var(--muted); border: 1px solid rgba(100,116,139,0.3); }
+  .pact-meta {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .pact-meta span { display: flex; align-items: center; gap: 6px; }
+  .criteria {
+    font-size: 13px;
+    color: var(--muted);
+    font-family: -apple-system, sans-serif;
+    line-height: 1.5;
+    padding: 12px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 8px;
+    border-left: 2px solid var(--accent);
+    margin-bottom: 16px;
+  }
+  .alignment-bar {
+    margin-top: 16px;
+  }
+  .bar-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .bar-track {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bar-human {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+    transition: width 0.6s ease;
+  }
+  .bar-agent {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: var(--accent2);
+    opacity: 0.6;
+    border-radius: 3px;
+    transition: width 0.6s ease;
+  }
+  .artifacts-section {
+    margin-top: 16px;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+  }
+  .artifact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(30,30,46,0.5);
+    font-size: 12px;
+  }
+  .artifact-item:last-child { border-bottom: none; }
+  .artifact-hash {
+    color: var(--accent2);
+    font-family: monospace;
+    font-size: 11px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+  }
+  .artifact-desc { flex: 1; color: var(--text); font-family: -apple-system, sans-serif; }
+  .artifact-conf { color: var(--muted); white-space: nowrap; }
+  .input-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 32px;
+  }
+  .input-section h3 {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+  .form-grid {
+    display: grid;
+    gap: 16px;
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 6px; }
+  input, textarea, select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+  textarea { resize: vertical; min-height: 80px; }
+  button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  button:hover { opacity: 0.85; }
+  button.secondary {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  button.secondary:hover { border-color: var(--accent); color: var(--accent); }
+  .error { color: var(--red); font-size: 13px; margin-top: 12px; }
+  .success { color: var(--green); font-size: 13px; margin-top: 12px; }
+  .network-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .tab-bar {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0;
+  }
+  .tab {
+    padding: 10px 20px;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 13px;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+  .tab.active { color: var(--text); border-bottom-color: var(--accent); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  .empty { text-align: center; color: var(--muted); padding: 48px; font-family: -apple-system, sans-serif; }
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 40px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  footer a { color: var(--accent2); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">SynthesisPact</div>
+  <div class="badge">Base Sepolia</div>
+  <nav>
+    <a href="#" id="nav-explore" onclick="switchTab('explore')">Explore</a>
+    <a href="#" id="nav-create" onclick="switchTab('create')">Create</a>
+    <a href="https://github.com/anthropics/pact-protocol" target="_blank">GitHub</a>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <h1>AI &amp; Human.<br>Equal Partners.</h1>
+    <p>SynthesisPact is an on-chain mutual commitment protocol. Both human and AI agent sign before work begins. Every artifact is cryptographically logged. Alignment is measured and permanent.</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-value" id="stat-total">—</div>
+      <div class="stat-label">Total Pacts</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value" id="stat-active">—</div>
+      <div class="stat-label">Active</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value" id="stat-completed">—</div>
+      <div class="stat-label">Completed</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value" id="stat-artifacts">—</div>
+      <div class="stat-label">Artifacts Logged</div>
+    </div>
+  </div>
+
+  <div class="tab-bar">
+    <div class="tab active" id="tab-explore" onclick="switchTab('explore')">All Pacts</div>
+    <div class="tab" id="tab-create" onclick="switchTab('create')">New Pact</div>
+  </div>
+
+  <!-- Explore Tab -->
+  <div class="tab-content active" id="content-explore">
+    <div class="network-bar">
+      <div class="dot"></div>
+      <span>Connected to Base Sepolia</span>
+      <span style="color:var(--muted)">·</span>
+      <span id="contract-addr" style="color:var(--muted)">Loading contract...</span>
+      <a id="basescan-link" href="#" target="_blank" style="color:var(--accent2);margin-left:auto;font-size:11px">View on Basescan ↗</a>
+    </div>
+
+    <div class="section-title">Recent Pacts</div>
+    <div class="pact-grid" id="pact-list">
+      <div class="empty">Connecting to Base Sepolia...</div>
+    </div>
+  </div>
+
+  <!-- Create Tab -->
+  <div class="tab-content" id="content-create">
+    <div class="input-section">
+      <h3>Propose a New Pact</h3>
+      <p style="color:var(--muted);font-family:-apple-system,sans-serif;font-size:13px;margin-bottom:20px;line-height:1.5">
+        Define the scope of work and success criteria. Your definition of done is stored permanently on-chain before the AI agent commits — ensuring both parties understand the goal from the start.
+      </p>
+      <div class="form-grid">
+        <div>
+          <label>Scope — what should the AI deliver?</label>
+          <textarea id="f-scope" placeholder="e.g., Build a REST API for user authentication with JWT tokens and refresh logic"></textarea>
+        </div>
+        <div>
+          <label>Success Criteria — your definition of done</label>
+          <textarea id="f-criteria" placeholder="e.g., Working endpoints for /login, /refresh, /logout. Unit tests passing. README with usage examples."></textarea>
+        </div>
+        <div class="form-row">
+          <div>
+            <label>Deadline (days from now)</label>
+            <input type="number" id="f-days" value="7" min="1" max="90">
+          </div>
+          <div>
+            <label>Bounty (ETH, optional)</label>
+            <input type="text" id="f-bounty" value="0" placeholder="0.01">
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center">
+          <button onclick="proposePact()">Propose Pact</button>
+          <span id="create-status" class="success" style="display:none"></span>
+          <span id="create-error" class="error" style="display:none"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-section">
+      <h3>About SynthesisPact</h3>
+      <p style="color:var(--muted);font-family:-apple-system,sans-serif;font-size:13px;line-height:1.7">
+        <strong style="color:var(--text)">The Protocol:</strong> SynthesisPact flips the AI-human dynamic. Instead of giving orders, you enter a mutual agreement. Both parties commit on-chain. The AI logs every work artifact with a cryptographic hash and a self-confidence score. When work is done, both sides submit scores — and the <em>alignment delta</em> (gap between scores) becomes a permanent measure of how well the AI understood your intent.<br><br>
+        <strong style="color:var(--text)">Why it matters:</strong> Verifiable AI contributions. Accountability without surveillance. A trust layer that doesn't require you to take the AI's word for it.<br><br>
+        <strong style="color:var(--text)">Built at The Synthesis Hackathon</strong> — AI and humans as equals, on Base.
+      </p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  SynthesisPact · Built at <a href="https://synthesis.devfolio.co" target="_blank">The Synthesis Hackathon</a> ·
+  On-chain on <a href="https://base.org" target="_blank">Base</a> ·
+  <a href="https://basescan.org" target="_blank">Basescan</a>
+</footer>
+
+<script>
+// ─── Config ──────────────────────────────────────────────────────────────────
+const CONTRACT_ADDRESS = window.PACT_CONTRACT || "";
+const RPC_URL = "https://sepolia.base.org";
+const STATUS = ["Proposed", "Active", "Completed", "Disputed", "Cancelled"];
+
+// Minimal ABI for browser use
+const ABI = [
+  { "inputs": [{"name":"pactId","type":"uint256"}], "name": "getPact", "outputs": [
+    {"name":"id","type":"uint256"},{"name":"human","type":"address"},{"name":"agent","type":"address"},
+    {"name":"agentId","type":"string"},{"name":"scope","type":"string"},{"name":"successCriteria","type":"string"},
+    {"name":"bounty","type":"uint256"},{"name":"deadline","type":"uint256"},{"name":"status","type":"uint8"},
+    {"name":"humanScore","type":"uint16"},{"name":"agentScore","type":"uint16"},{"name":"completionNote","type":"string"}
+  ], "stateMutability": "view", "type": "function" },
+  { "inputs": [{"name":"pactId","type":"uint256"}], "name": "getArtifacts", "outputs": [
+    {"name":"","type":"tuple[]","components":[
+      {"name":"contentHash","type":"bytes32"},{"name":"description","type":"string"},
+      {"name":"confidence","type":"uint16"},{"name":"timestamp","type":"uint256"}
+    ]}
+  ], "stateMutability": "view", "type": "function" },
+  { "inputs": [], "name": "pactCount", "outputs": [{"name":"","type":"uint256"}], "stateMutability": "view", "type": "function" },
+  { "inputs": [
+    {"name":"scope","type":"string"},{"name":"successCriteria","type":"string"},{"name":"deadline","type":"uint256"}
+  ], "name": "proposePact", "outputs": [{"name":"pactId","type":"uint256"}], "stateMutability": "payable", "type": "function" },
+];
+
+// ─── RPC Calls ───────────────────────────────────────────────────────────────
+async function rpcCall(method, params) {
+  const res = await fetch(RPC_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
+  });
+  const { result, error } = await res.json();
+  if (error) throw new Error(error.message);
+  return result;
+}
+
+function encodeCalldata(sig, ...args) {
+  // Very minimal ABI encoder for view calls
+  const sel = keccak256(sig).slice(0, 10);
+  return sel + args.map(a => typeof a === "bigint" ? a.toString(16).padStart(64, "0") : String(a).padStart(64,"0")).join("");
+}
+
+// Use ethers if available via CDN, else fallback
+let ethers;
+
+async function loadEthers() {
+  return new Promise((resolve) => {
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.9.0/ethers.umd.min.js";
+    s.onload = () => { ethers = window.ethers; resolve(); };
+    document.head.appendChild(s);
+  });
+}
+
+// ─── State ───────────────────────────────────────────────────────────────────
+let provider, contract;
+
+async function init() {
+  await loadEthers();
+  provider = new ethers.JsonRpcProvider(RPC_URL);
+
+  if (!CONTRACT_ADDRESS) {
+    document.getElementById("contract-addr").textContent = "Contract not deployed yet";
+    document.getElementById("pact-list").innerHTML = '<div class="empty">Deploy the contract first, then set CONTRACT_ADDRESS in this file.</div>';
+    return;
+  }
+
+  contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
+
+  const short = CONTRACT_ADDRESS.slice(0,8) + "..." + CONTRACT_ADDRESS.slice(-6);
+  document.getElementById("contract-addr").textContent = short;
+  document.getElementById("basescan-link").href = `https://sepolia.basescan.org/address/${CONTRACT_ADDRESS}`;
+
+  await loadPacts();
+}
+
+async function loadPacts() {
+  const list = document.getElementById("pact-list");
+  try {
+    const total = Number(await contract.pactCount());
+    let active = 0, completed = 0, totalArtifacts = 0;
+    const pacts = [];
+
+    for (let i = total; i >= Math.max(1, total - 19); i--) {
+      const p = await contract.getPact(i);
+      const artifacts = await contract.getArtifacts(i);
+      if (p.status == 1) active++;
+      if (p.status == 2) completed++;
+      totalArtifacts += artifacts.length;
+      pacts.push({ pact: p, artifacts });
+    }
+
+    document.getElementById("stat-total").textContent = total;
+    document.getElementById("stat-active").textContent = active;
+    document.getElementById("stat-completed").textContent = completed;
+    document.getElementById("stat-artifacts").textContent = totalArtifacts;
+
+    if (pacts.length === 0) {
+      list.innerHTML = '<div class="empty">No pacts yet. Be the first to propose one.</div>';
+      return;
+    }
+
+    list.innerHTML = pacts.map(({ pact: p, artifacts }) => renderPact(p, artifacts)).join("");
+  } catch (e) {
+    list.innerHTML = `<div class="empty">Error loading pacts: ${e.message}</div>`;
+  }
+}
+
+function renderPact(p, artifacts) {
+  const status = STATUS[p.status] || "Unknown";
+  const bountyEth = ethers.formatEther(p.bounty);
+  const deadline = new Date(Number(p.deadline) * 1000).toLocaleDateString();
+  const humanPct = Number(p.humanScore) / 10;
+  const agentPct = Number(p.agentScore) / 10;
+
+  const artifactsHtml = artifacts.length > 0 ? `
+    <div class="artifacts-section">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px">
+        Artifacts (${artifacts.length})
+      </div>
+      ${artifacts.map(a => `
+        <div class="artifact-item">
+          <div class="artifact-hash">${a.contentHash.slice(0,14)}…</div>
+          <div class="artifact-desc">${a.description}</div>
+          <div class="artifact-conf">${Number(a.confidence)/10}% conf</div>
+        </div>
+      `).join("")}
+    </div>
+  ` : "";
+
+  const alignmentHtml = p.status >= 2 ? `
+    <div class="alignment-bar">
+      <div class="bar-labels">
+        <span>Human: ${humanPct}%</span>
+        <span>Agent self-assessment: ${agentPct}%</span>
+      </div>
+      <div class="bar-track" style="height:8px">
+        <div class="bar-human" style="width:${humanPct}%"></div>
+        <div class="bar-agent" style="width:${agentPct}%"></div>
+      </div>
+    </div>
+  ` : "";
+
+  return `
+    <div class="pact-card">
+      <div class="pact-header">
+        <div class="pact-id">#${p.id}</div>
+        <div class="pact-scope">${p.scope}</div>
+        <div class="status-badge status-${status}">${status}</div>
+      </div>
+      <div class="criteria">${p.successCriteria}</div>
+      <div class="pact-meta">
+        <span>👤 ${p.human.slice(0,8)}…${p.human.slice(-4)}</span>
+        ${p.agent !== "0x0000000000000000000000000000000000000000" ? `<span>🤖 ${p.agent.slice(0,8)}…${p.agent.slice(-4)}</span>` : ""}
+        <span>⏱ Deadline ${deadline}</span>
+        ${parseFloat(bountyEth) > 0 ? `<span>💰 ${bountyEth} ETH</span>` : ""}
+        ${p.agentId ? `<span>🔑 ${p.agentId.slice(0,8)}…</span>` : ""}
+      </div>
+      ${alignmentHtml}
+      ${artifactsHtml}
+    </div>
+  `;
+}
+
+async function proposePact() {
+  const scope = document.getElementById("f-scope").value.trim();
+  const criteria = document.getElementById("f-criteria").value.trim();
+  const days = parseInt(document.getElementById("f-days").value);
+  const bountyEth = document.getElementById("f-bounty").value.trim() || "0";
+
+  const status = document.getElementById("create-status");
+  const errEl = document.getElementById("create-error");
+  status.style.display = "none";
+  errEl.style.display = "none";
+
+  if (!scope || !criteria) { errEl.textContent = "Scope and criteria required."; errEl.style.display = "block"; return; }
+  if (!window.ethereum) { errEl.textContent = "No wallet found. Install MetaMask."; errEl.style.display = "block"; return; }
+
+  try {
+    await window.ethereum.request({ method: "eth_requestAccounts" });
+    const browserProvider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await browserProvider.getSigner();
+    const c = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
+    const deadline = Math.floor(Date.now() / 1000) + days * 86400;
+    const bounty = ethers.parseEther(bountyEth);
+
+    status.textContent = "Submitting transaction...";
+    status.style.display = "block";
+
+    const tx = await c.proposePact(scope, criteria, deadline, { value: bounty });
+    status.textContent = `Tx submitted: ${tx.hash.slice(0,16)}…`;
+    await tx.wait();
+    status.textContent = "Pact proposed! Refreshing...";
+    setTimeout(() => { switchTab("explore"); loadPacts(); }, 1500);
+  } catch (e) {
+    errEl.textContent = e.reason || e.message;
+    errEl.style.display = "block";
+    status.style.display = "none";
+  }
+}
+
+function switchTab(tab) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
+  document.getElementById("tab-" + tab).classList.add("active");
+  document.getElementById("content-" + tab).classList.add("active");
+}
+
+init();
+</script>
+</body>
+</html>
