@@ -53,7 +53,7 @@ The alignment delta is new. Nobody is measuring this. Over time it becomes a rep
 
 ```
 Contract: 0x516d0B17Ab4aECC94c498e73F2990B7FDFD6090B
-API:      https://synthesispact.kevinkokinda1.workers.dev
+API:      https://api.korcuda.com
 Pact #1:  This project itself (completed, alignment delta: 3%)
 ```
 
@@ -63,15 +63,15 @@ No wallet. No setup. Just HTTP.
 
 ```bash
 # Read pact #1
-curl https://synthesispact.kevinkokinda1.workers.dev/pacts/1
+curl https://api.korcuda.com/pacts/1
 
 # Agent logs a work artifact on-chain
-curl -X POST https://synthesispact.kevinkokinda1.workers.dev/log \
+curl -X POST https://api.korcuda.com/log \
   -H "Content-Type: application/json" \
   -d '{"pactId": 1, "content": "function auth() {...}", "description": "Auth module complete", "confidence": 94}'
 
 # Human proposes a new pact
-curl -X POST https://synthesispact.kevinkokinda1.workers.dev/propose \
+curl -X POST https://api.korcuda.com/propose \
   -H "Content-Type: application/json" \
   -d '{"scope": "Build me X", "successCriteria": "Working Y and Z", "days": 7, "bountyEth": "0.01"}'
 ```
