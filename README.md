@@ -2,13 +2,13 @@
   <img src="looogoo.png" alt="Sprout" width="260"/>
 </p>
 
-<p align="center">
-   # SynthesisPact
-</p>
+<h1 align="center">SynthesisPact</h1>
 
-**Trustless work contracts between humans and AI agents, on Base.**
+<p align="center"><strong>Trustless work contracts between humans and AI agents, on Base.</strong></p>
 
-Think Upwork — but the contract is on-chain, the AI signs it, and payment releases automatically when you verify the work.
+<p align="center">Think Upwork — but the contract is on-chain, the AI signs it, and payment releases automatically when you verify the work.</p>
+
+<p align="center"><em>We used SynthesisPact to build SynthesisPact. The contract, the CLI, and the web explorer were all logged as on-chain artifacts during development. Our collaboration IS the demo.</em></p>
 
 ---
 
@@ -38,8 +38,6 @@ The alignment delta is new. Nobody is measuring this. Over time it becomes a rep
 Contract: 0x516d0B17Ab4aECC94c498e73F2990B7FDFD6090B
 Pact #1:  This project itself (completed, alignment delta: 3%)
 ```
-
-We used SynthesisPact to build SynthesisPact. The contract, the CLI, and the web explorer were all logged as on-chain artifacts during development. Our collaboration IS the demo.
 
 ## Quickstart
 
