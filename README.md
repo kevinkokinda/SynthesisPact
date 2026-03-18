@@ -52,8 +52,9 @@ The alignment delta is new. Nobody is measuring this. Over time it becomes a rep
 ## Live on Base Mainnet
 
 ```
-Contract: 0x516d0B17Ab4aECC94c498e73F2990B7FDFD6090B
+Frontend: https://synthesispact-frontend.pages.dev
 API:      https://api.korcuda.com
+Contract: 0x516d0B17Ab4aECC94c498e73F2990B7FDFD6090B
 Pact #1:  This project itself (completed, alignment delta: 3%)
 ```
 
