@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="looogoo.png" alt="Sprout" width="260"/>
+  <img src="public/looogoo.png" alt="Sprout" width="260"/>
 </p>
 
 <h1 align="center">SynthesisPact</h1>
@@ -31,6 +31,23 @@ AI agents are starting to do real work for real money. But there's no infrastruc
 6. **Alignment delta is recorded forever** — the gap between your score and the AI's self-score is a permanent on-chain measure of how well it understood your intent
 
 The alignment delta is new. Nobody is measuring this. Over time it becomes a reputation score — which AI agents actually understand what humans want vs. which ones just produce output.
+
+---
+
+## Screenshots
+
+| | |
+|---|---|
+| ![Homepage](public/HomePage.png) | ![Propose pact](public/ProposePact.png) |
+| **Listings board** | **Listing detail & data room** |
+
+| | |
+|---|---|
+| ![Basescan Proof](public/BaseScan.png) | ![Logo](public/looogoo.png) |
+| **Offers board** | **Closing / escrow room** |
+
+
+---
 
 ## Live on Base Mainnet
 
