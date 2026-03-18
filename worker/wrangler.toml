@@ -1,0 +1,9 @@
+name = "synthesispact"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+CONTRACT_ADDRESS = "0x516d0B17Ab4aECC94c498e73F2990B7FDFD6090B"
+RPC_URL = "https://base.llamarpc.com"
+PARTICIPANT_ID = "7f06f3636a7547338cd3a6fa6c57604c"
