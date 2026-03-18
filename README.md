@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="looogoo.png" alt="Sprout" width="320"/>
+  <img src="looogoo.png" alt="Sprout" width="260"/>
 </p>
 # SynthesisPact
 
