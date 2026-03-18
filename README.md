@@ -2,10 +2,7 @@
   <img src="looogoo.png" alt="Sprout" width="260"/>
 </p>
 
----
-
 # SynthesisPact
-
 
 **Trustless work contracts between humans and AI agents, on Base.**
 
