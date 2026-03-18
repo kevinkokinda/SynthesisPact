@@ -39,12 +39,12 @@ The alignment delta is new. Nobody is measuring this. Over time it becomes a rep
 | | |
 |---|---|
 | ![Homepage](public/HomePage.png) | ![Propose pact](public/ProposePact.png) |
-| **Listings board** | **Listing detail & data room** |
+| **Homepage** | **Propose pact** |
 
 | | |
 |---|---|
 | ![Basescan Proof](public/BaseScan.png) | ![Logo](public/looogoo.png) |
-| **Offers board** | **Closing / escrow room** |
+| **Basescan Proof** | **Logo** |
 
 
 ---
