@@ -11,9 +11,9 @@
 <p align="center"><em>We used SynthesisPact to build SynthesisPact. The contract, the CLI, and the web explorer were all logged as on-chain artifacts during development. Our collaboration IS the demo.</em></p>
 
 <p align="center">
-  <a href="https://synthesispact-frontend.pages.dev"><img src="https://img.shields.io/badge/Live_Demo-000000?style=for-the-badge" alt="Live Demo"/></a>
+  <a href="https://synthesispact-frontend.pages.dev"><img src="https://img.shields.io/badge/Live_Demo-00d4ff?style=for-the-badge&logoColor=000" alt="Live Demo"/></a>
   &nbsp;
-  <a href="https://api.korcuda.com"><img src="https://img.shields.io/badge/API-7c3aed?style=for-the-badge" alt="API"/></a>
+  <a href="https://api.korcuda.com"><img src="https://img.shields.io/badge/API-a855f7?style=for-the-badge&logoColor=fff" alt="API"/></a>
 </p>
 
 ---
