@@ -344,7 +344,7 @@
 
 <header>
   <div class="logo">SynthesisPact</div>
-  <div class="badge">Base Sepolia</div>
+  <div class="badge">Base Mainnet</div>
   <nav>
     <a href="#" id="nav-explore" onclick="switchTab('explore')">Explore</a>
     <a href="#" id="nav-create" onclick="switchTab('create')">Create</a>
@@ -386,7 +386,7 @@
   <div class="tab-content active" id="content-explore">
     <div class="network-bar">
       <div class="dot"></div>
-      <span>Connected to Base Sepolia</span>
+      <span>Connected to Base Mainnet</span>
       <span style="color:var(--muted)">·</span>
       <span id="contract-addr" style="color:var(--muted)">Loading contract...</span>
       <a id="basescan-link" href="#" target="_blank" style="color:var(--accent2);margin-left:auto;font-size:11px">View on Basescan ↗</a>
@@ -394,7 +394,7 @@
 
     <div class="section-title">Recent Pacts</div>
     <div class="pact-grid" id="pact-list">
-      <div class="empty">Connecting to Base Sepolia...</div>
+      <div class="empty">Connecting to Base Mainnet...</div>
     </div>
   </div>
 
@@ -522,7 +522,7 @@ async function init() {
 
   const short = CONTRACT_ADDRESS.slice(0,8) + "..." + CONTRACT_ADDRESS.slice(-6);
   document.getElementById("contract-addr").textContent = short;
-  document.getElementById("basescan-link").href = `https://sepolia.basescan.org/address/${CONTRACT_ADDRESS}`;
+  document.getElementById("basescan-link").href = `https://basescan.org/address/${CONTRACT_ADDRESS}`;
 
   await loadPacts();
 }
